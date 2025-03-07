@@ -53,7 +53,7 @@ jobs:
       - name: Terraform docs
         uses: terraform-docs/gh-actions@v1.3.0
         with:
-          working-directory: terraform
+          working-dir: terraform
           format: markdown
           fail-on-diff: true
 
