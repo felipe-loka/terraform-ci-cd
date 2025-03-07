@@ -68,6 +68,7 @@ jobs:
         uses: aquasecurity/trivy-action@0.28.0
         with:
           working-directory: terraform
+          format: table
           scan-type: config
           severity: CRITICAL,HIGH
           fail-on-diff: false
