@@ -50,16 +50,16 @@ jobs:
           severity: CRITICAL,HIGH
           fail-on-diff: true
 
+      - name: Terraform TfLint
+        working-directory: terraform
+        run: tflint --recursive
+
       - name: Terraform docs
         uses: terraform-docs/gh-actions@v1.3.0
         with:
           working-dir: terraform
           config-file: .terraform-docs.yml
           fail-on-diff: true
-
-      - name: Terraform TfLint
-        working-directory: terraform
-        run: tflint --recursive
 
   plan-dev-us-east-1:
     name: "[DEV - us-east-1] Terraform Plan"

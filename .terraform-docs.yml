@@ -1,7 +1,5 @@
 formatter: markdown
 
-output-file: README.md
-
 output:
   file: README.md
   mode: inject
