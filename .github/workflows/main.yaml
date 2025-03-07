@@ -46,6 +46,8 @@ jobs:
           -platform=darwin_amd64 \
           -platform=darwin_arm64
 
+          git status
+
           if git diff --exit-code .terraform.lock.hcl; then
             echo "No changes to .terraform.lock.hcl"
           else
