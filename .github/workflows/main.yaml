@@ -13,8 +13,8 @@ permissions:
 
 env:
   TERRAFORM_VERSION: 1.11.0
-  DEV_TERRAFORM_ROLE: arn:aws:iam::123456789012:role/dev-terraform
-  PROD_TERRAFORM_ROLE: arn:aws:iam::123456789012:role/prod-terraform
+  DEV_TERRAFORM_ROLE: arn:aws:iam::937168356724:role/GitHubActions
+  PROD_TERRAFORM_ROLE: arn:aws:iam::730335516527:role/GitHubActions
 
 jobs:
   ci:
@@ -70,7 +70,7 @@ jobs:
           action: plan
           environment: DEV
           aws_region: us-east-1
-          tfconfig_path: config/dev.hcl
+          tfconfig_path: config/dev/us-east-1.hcl
           tfvars_path: vars/dev/us-east-1.tfvars
           aws_role_arn: ${{ env.DEV_TERRAFORM_ROLE }}
           github_token: ${{ github.token }}
@@ -95,7 +95,7 @@ jobs:
           action: apply
           environment: DEV
           aws_region: us-east-1
-          tfconfig_path: config/dev.hcl
+          tfconfig_path: config/dev/us-east-1.hcl
           tfvars_path: vars/dev/us-east-1.tfvars
           aws_role_arn: ${{ env.DEV_TERRAFORM_ROLE }}
           terraform_version: ${{ env.TERRAFORM_VERSION }}
@@ -114,7 +114,7 @@ jobs:
           action: plan
           environment: PROD
           aws_region: us-east-1
-          tfconfig_path: config/prod.hcl
+          tfconfig_path: config/prod/us-east-1.hcl
           tfvars_path: vars/prod/us-east-1.tfvars
           aws_role_arn: ${{ env.PROD_TERRAFORM_ROLE }}
           github_token: ${{ github.token }}
@@ -140,7 +140,7 @@ jobs:
           action: apply
           environment: PROD
           aws_region: us-east-1
-          tfconfig_path: config/prod.hcl
+          tfconfig_path: config/prod/us-east-1.hcl
           tfvars_path: vars/prod/us-east-1.tfvars
           aws_role_arn: ${{ env.PROD_TERRAFORM_ROLE }}
           terraform_version: ${{ env.TERRAFORM_VERSION }}
