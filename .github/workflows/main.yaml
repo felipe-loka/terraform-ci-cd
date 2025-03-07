@@ -34,6 +34,10 @@ jobs:
         with:
           GITHUB_TOKEN: ${{ github.token }}
 
+      - name: Run Terraform Init
+        working-directory: terraform
+        run: terraform init -backend=false
+
       - name: Run Terraform validate
         working-directory: terraform
         run: terraform validate
