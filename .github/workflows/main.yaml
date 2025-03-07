@@ -46,7 +46,11 @@ jobs:
           -platform=darwin_amd64 \
           -platform=darwin_arm64
 
-          git status
+          if ! git ls-files --error-unmatch .terraform.lock.hcl >/dev/null 2>&1; then
+            echo "The .terraform.lock.hcl file is missing!"
+            echo "Please add the lock file and commit the changes."
+            exit 1
+          fi
 
           if git diff --exit-code .terraform.lock.hcl; then
             echo "No changes to .terraform.lock.hcl"
