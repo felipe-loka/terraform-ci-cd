@@ -78,15 +78,23 @@ jobs:
         run: |
           cat trivy-result.txt
           if [ -s trivy-result.txt ]; then
-            echo -e "## Vulnerability Scan Results\n<details><summary>Details</summary>\n\n\`\`\`\n$(cat trivy-result.txt)\n\`\`\`\n</details>" > formatted-trivy-result.md
+            echo -e "## Vulnerability Scan Results\n<details><summary>Details</summary>\n\n\`\`\`\n$(cat trivy-result.txt)\n\`\`\`\n</details>" > trivy-result.txt
+            echo "vulnerabilities=true" >> $GITHUB_ENV
           else
-            echo -e "## Vulnerability Scan Results\nNo vulnerabilities were detected." > formatted-trivy-result.md
+            echo "vulnerabilities=false" >> $GITHUB_ENV
           fi
 
       - name: Comment PR with Trivy scan results
+        if: env.vulnerabilities == 'true'
         uses: marocchino/sticky-pull-request-comment@v2
         with:
-          path: formatted-trivy-result.md
+          path: trivy-result.md
+
+      - name: Fail if Vulnerabilities Exist
+        if: env.vulnerabilities == 'true'
+        run: |
+          echo "Vulnerabilities were found. Please fix it following commits."
+          exit 1
 
       - name: Terraform TfLint
         working-directory: terraform
