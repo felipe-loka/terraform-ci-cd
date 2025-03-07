@@ -52,7 +52,9 @@ jobs:
 
       - name: Terraform TfLint
         working-directory: terraform
-        run: tflint --recursive
+        run: |
+          tflint --init
+          tflint --recursive
 
       - name: Terraform docs
         uses: terraform-docs/gh-actions@v1.3.0
