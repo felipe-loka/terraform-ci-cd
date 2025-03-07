@@ -1,0 +1,146 @@
+name: "Terraform"
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: write
+  pull-requests: write
+  id-token: write
+
+env:
+  TERRAFORM_VERSION: 1.11.0
+  DEV_TERRAFORM_ROLE: arn:aws:iam::123456789012:role/dev-terraform
+  PROD_TERRAFORM_ROLE: arn:aws:iam::123456789012:role/prod-terraform
+
+jobs:
+  ci:
+    if: github.event_name == 'pull_request' && github.ref != 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v4
+        with:
+          terraform-version: ${{ env.TERRAFORM_VERSION }}
+
+      - name: Terraform TfLint
+        uses: terraform-linters/setup-tflint@v4.1.1
+        with:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: Run Terraform validate
+        working-directory: terraform
+        run: terraform validate
+
+      - name: Terraform Trivy Security Scan
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          working-directory: terraform
+          severity: CRITICAL,HIGH
+          fail-on-diff: true
+
+      - name: Terraform docs
+        uses: terraform-docs/gh-actions@v1.3.0
+        with:
+          working-directory: terraform
+          format: markdown
+          fail-on-diff: true
+
+      - name: Terraform TfLint
+        working-directory: terraform
+        run: tflint --recursive
+
+  plan-dev-us-east-1:
+    name: "[DEV - us-east-1] Terraform Plan"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Terraform Plan
+        uses: ./.github/actions/terraform
+        with:
+          action: plan
+          environment: DEV
+          aws_region: us-east-1
+          tfconfig_path: config/dev.hcl
+          tfvars_path: vars/dev/us-east-1.tfvars
+          aws_role_arn: ${{ env.DEV_TERRAFORM_ROLE }}
+          github_token: ${{ github.token }}
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+
+  apply-dev-us-east-1:
+    needs:
+      - plan-dev-us-east-1
+    name: "[DEV - us-east-1] Terraform Apply"
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    environment:
+      name: dev
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Terraform Apply
+        uses: ./.github/actions/terraform
+        with:
+          action: apply
+          environment: DEV
+          aws_region: us-east-1
+          tfconfig_path: config/dev.hcl
+          tfvars_path: vars/dev/us-east-1.tfvars
+          aws_role_arn: ${{ env.DEV_TERRAFORM_ROLE }}
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+
+  plan-prod-us-east-1:
+    name: "[PROD - us-east-1] Terraform Plan"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Terraform Plan
+        uses: ./.github/actions/terraform
+        with:
+          action: plan
+          environment: PROD
+          aws_region: us-east-1
+          tfconfig_path: config/prod.hcl
+          tfvars_path: vars/prod/us-east-1.tfvars
+          aws_role_arn: ${{ env.PROD_TERRAFORM_ROLE }}
+          github_token: ${{ github.token }}
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+
+  apply-prod-us-east-1:
+    needs:
+      - apply-dev-us-east-1
+      - plan-prod-us-east-1
+    name: "[PROD - us-east-1] Terraform Apply"
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    environment:
+      name: prod
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Terraform Apply
+        uses: ./.github/actions/terraform
+        with:
+          action: apply
+          environment: PROD
+          aws_region: us-east-1
+          tfconfig_path: config/prod.hcl
+          tfvars_path: vars/prod/us-east-1.tfvars
+          aws_role_arn: ${{ env.PROD_TERRAFORM_ROLE }}
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
