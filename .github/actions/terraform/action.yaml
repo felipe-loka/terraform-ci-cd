@@ -39,12 +39,12 @@ runs:
   using: "composite"
   steps:
     - name: Install Terraform
-      uses: hashicorp/setup-terraform@v4
+      uses: hashicorp/setup-terraform@v3
       with:
         terraform-version: ${{ inputs.terraform_version }}
 
     - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v3.1.2
+      uses: aws-actions/configure-aws-credentials@v3
       with:
         role-to-assume: ${{ inputs.aws_role_arn }}
         role-session-name: Github-Actions

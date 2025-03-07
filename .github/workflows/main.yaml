@@ -13,8 +13,8 @@ permissions:
 
 env:
   TERRAFORM_VERSION: 1.11.0
-  DEV_TERRAFORM_ROLE: arn:aws:iam::123456789012:role/dev-terraform
-  PROD_TERRAFORM_ROLE: arn:aws:iam::123456789012:role/prod-terraform
+  DEV_TERRAFORM_ROLE: arn:aws:iam::937168356724:role/GitHubActions
+  PROD_TERRAFORM_ROLE: arn:aws:iam::730335516527:role/GitHubActions
 
 jobs:
   ci:
@@ -25,7 +25,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install Terraform
-        uses: hashicorp/setup-terraform@v4
+        uses: hashicorp/setup-terraform@v3.1.2
         with:
           terraform-version: ${{ env.TERRAFORM_VERSION }}
 
@@ -33,6 +33,32 @@ jobs:
         uses: terraform-linters/setup-tflint@v4.1.1
         with:
           GITHUB_TOKEN: ${{ github.token }}
+
+      - name: Run Terraform Init
+        working-directory: terraform
+        run: terraform init -backend=false
+
+      - name: Terraform Providers Lock Check
+        working-directory: terraform
+        run: |
+          terraform providers lock \
+          -platform=linux_amd64 \
+          -platform=darwin_amd64 \
+          -platform=darwin_arm64
+
+          if ! git ls-files --error-unmatch .terraform.lock.hcl >/dev/null 2>&1; then
+            echo "The .terraform.lock.hcl file is missing!"
+            echo "Please add the lock file and commit the changes."
+            exit 1
+          fi
+
+          if git diff --exit-code .terraform.lock.hcl; then
+            echo "No changes to .terraform.lock.hcl"
+          else
+            echo "There are changes in the .terraform.lock.hcl"
+            echo "Please update the lock file with and commit the changes."
+            exit 1
+          fi
 
       - name: Run Terraform validate
         working-directory: terraform
@@ -42,19 +68,22 @@ jobs:
         uses: aquasecurity/trivy-action@0.28.0
         with:
           working-directory: terraform
+          scan-type: config
           severity: CRITICAL,HIGH
-          fail-on-diff: true
-
-      - name: Terraform docs
-        uses: terraform-docs/gh-actions@v1.3.0
-        with:
-          working-directory: terraform
-          format: markdown
           fail-on-diff: true
 
       - name: Terraform TfLint
         working-directory: terraform
-        run: tflint --recursive
+        run: |
+          tflint --init
+          tflint --recursive
+
+      - name: Terraform docs
+        uses: terraform-docs/gh-actions@v1.3.0
+        with:
+          working-dir: terraform
+          config-file: .terraform-docs.yml
+          fail-on-diff: true
 
   plan-dev-us-east-1:
     name: "[DEV - us-east-1] Terraform Plan"
@@ -70,7 +99,7 @@ jobs:
           action: plan
           environment: DEV
           aws_region: us-east-1
-          tfconfig_path: config/dev.hcl
+          tfconfig_path: config/dev/us-east-1.hcl
           tfvars_path: vars/dev/us-east-1.tfvars
           aws_role_arn: ${{ env.DEV_TERRAFORM_ROLE }}
           github_token: ${{ github.token }}
@@ -95,7 +124,7 @@ jobs:
           action: apply
           environment: DEV
           aws_region: us-east-1
-          tfconfig_path: config/dev.hcl
+          tfconfig_path: config/dev/us-east-1.hcl
           tfvars_path: vars/dev/us-east-1.tfvars
           aws_role_arn: ${{ env.DEV_TERRAFORM_ROLE }}
           terraform_version: ${{ env.TERRAFORM_VERSION }}
@@ -114,7 +143,7 @@ jobs:
           action: plan
           environment: PROD
           aws_region: us-east-1
-          tfconfig_path: config/prod.hcl
+          tfconfig_path: config/prod/us-east-1.hcl
           tfvars_path: vars/prod/us-east-1.tfvars
           aws_role_arn: ${{ env.PROD_TERRAFORM_ROLE }}
           github_token: ${{ github.token }}
@@ -140,7 +169,7 @@ jobs:
           action: apply
           environment: PROD
           aws_region: us-east-1
-          tfconfig_path: config/prod.hcl
+          tfconfig_path: config/prod/us-east-1.hcl
           tfvars_path: vars/prod/us-east-1.tfvars
           aws_role_arn: ${{ env.PROD_TERRAFORM_ROLE }}
           terraform_version: ${{ env.TERRAFORM_VERSION }}
