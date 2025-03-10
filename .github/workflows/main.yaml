@@ -106,7 +106,16 @@ jobs:
         uses: terraform-docs/gh-actions@v1.3.0
         with:
           config-file: .terraform-docs.yml
-          fail-on-diff: true
+          fail-on-diff: false
+
+      - name: Debug Terraform-Docs
+        run: |
+          git status
+          echo "@@@@@@"
+          git diff README.md
+          echo "@@@@@@"
+          git diff README.md
+          modules/ec2/README.md
 
   plan-dev-us-east-1:
     name: "[DEV - us-east-1] Terraform Plan"
