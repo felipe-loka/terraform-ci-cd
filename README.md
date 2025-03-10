@@ -12,9 +12,7 @@ No providers.
 
 ## Modules
 
-| Name | Source | Version |
-|------|--------|---------|
-| <a name="module_ec2"></a> [ec2](#module\_ec2) | ./modules/ec2 | n/a |
+No modules.
 
 ## Resources
 
