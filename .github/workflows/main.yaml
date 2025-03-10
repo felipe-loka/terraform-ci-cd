@@ -113,6 +113,7 @@ jobs:
         with:
           working-dir: terraform
           config-file: .terraform-docs.yml
+          git-push: true
           # fail-on-diff: true
 
       - name: Check git diff
