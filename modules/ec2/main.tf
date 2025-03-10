@@ -1,12 +1,12 @@
 resource "aws_instance" "myec2" {
   ami           = "ami-05b10e08d247fb927"
-  instance_type    = var.instance_type
+  instance_type = var.instance_type
   metadata_options {
     http_tokens = "required"
   }
 
   root_block_device {
-    encrypted      = true
+    encrypted = true
   }
 
   ebs_block_device {
