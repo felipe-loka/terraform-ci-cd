@@ -11,3 +11,8 @@ output:
 sort:
   enabled: true
   by: name
+
+recursive:
+  enabled: true
+  path: modules
+  include-main: true

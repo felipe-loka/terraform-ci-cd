@@ -8,9 +8,6 @@ inputs:
   environment:
     description: "Account name that is being deployed. Allowed values: DEV, PROD"
     required: true
-  working_directory:
-    description: Path to the directory containing the terraform files
-    default: terraform
   aws_region:
     type: string
     description: AWS region to deploy resources to
@@ -52,20 +49,17 @@ runs:
 
     - name: Initialize terraform
       shell: bash
-      working-directory: ${{ inputs.working_directory }}
       run: terraform init -backend-config=$GITHUB_WORKSPACE/${{ inputs.tfconfig_path }}
 
     - name: Terraform Plan
       if: ${{ inputs.action == 'plan' && github.ref != 'refs/heads/main' }}
       shell: bash
-      working-directory: ${{ inputs.working_directory }}
       run: terraform plan -var-file=$GITHUB_WORKSPACE/${{ inputs.tfvars_path }} -out .planfile
 
     - name: Comment Terraform plan in PR
       if: ${{ inputs.action == 'plan' && github.ref != 'refs/heads/main' }}
       uses: borchero/terraform-plan-comment@v2
       with:
-        working-directory: ${{ inputs.working_directory }}
         token: ${{ inputs.github_token }}
         planfile: .planfile
         header: "[ ${{ inputs.environment }} - ${{ inputs.aws_region }}] Terraform Plan"
@@ -73,5 +67,4 @@ runs:
     - name: Terraform Apply
       if: ${{ inputs.action == 'apply' }}
       shell: bash
-      working-directory: ${{ inputs.working_directory }}
       run: terraform apply -auto-approve -var-file=$GITHUB_WORKSPACE/${{ inputs.tfvars_path }}

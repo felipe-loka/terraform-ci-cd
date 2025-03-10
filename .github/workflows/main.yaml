@@ -37,11 +37,12 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
 
       - name: Run Terraform Init
-        working-directory: terraform
         run: terraform init -backend=false
 
+      - name: Check Terraform Format
+        run: terraform fmt -check -recursive
+
       - name: Terraform Providers Lock Check
-        working-directory: terraform
         run: |
           terraform providers lock \
           -platform=linux_amd64 \
@@ -63,24 +64,19 @@ jobs:
           fi
 
       - name: Run Terraform validate
-        working-directory: terraform
         run: terraform validate
 
       - name: Terraform Trivy Security Scan
         uses: aquasecurity/trivy-action@0.28.0
         with:
-          working-directory: terraform
-          format: table
           scan-type: config
-          severity: CRITICAL,HIGH
-          fail-on-diff: false
           output: trivy-result.txt
 
       - name: Format Trivy Scan Result
         run: |
           cat trivy-result.txt
           if [ -s trivy-result.txt ]; then
-            echo -e "## Vulnerability Scan Results\n<details><summary>Details</summary>\n\n\`\`\`\n$(cat trivy-result.txt)\n\`\`\`\n</details>" > trivy-result.txt
+            echo -e "## :warning: Vulnerabilities Found! :warning: \n<details><summary>Please fix the security issues below </summary>\n\n\`\`\`\n$(cat trivy-result.txt)\n\`\`\`\n</details>" > trivy-result.txt
             echo "vulnerabilities=true" >> $GITHUB_ENV
           else
             echo "vulnerabilities=false" >> $GITHUB_ENV
@@ -101,11 +97,10 @@ jobs:
       - name: Fail if Vulnerabilities Exist
         if: env.vulnerabilities == 'true'
         run: |
-          echo "Vulnerabilities were found. Please fix it following commits."
+          echo "Vulnerabilities were found. Please fix it on the following commits."
           exit 1
 
       - name: Terraform TfLint
-        working-directory: terraform
         run: |
           tflint --init
           tflint --recursive
@@ -113,13 +108,8 @@ jobs:
       - name: Terraform docs
         uses: terraform-docs/gh-actions@v1.3.0
         with:
-          working-dir: terraform
           config-file: .terraform-docs.yml
           fail-on-diff: true
-
-      - name: Check git diff
-        run: |
-          git diff terraform/README.md
 
   plan-dev-us-east-1:
     name: "[DEV - us-east-1] Terraform Plan"
