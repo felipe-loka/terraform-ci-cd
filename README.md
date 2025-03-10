@@ -27,7 +27,9 @@ This project follows an Account-Region based deployment, i.e. an environment is 
 ## How does this CI/CD work?
 There is a custom GitHub Actions (`./github/actions/terraform/action.yaml` file) action that is used to run terraform plan and apply commands in a given environment, please check the `./github/workflows/main.yaml` file to understand how this is being used. A `ci` Job was also created to validate formating, linting and security issues.
 
-The best way to fully understand the CI/CD is to check its executions. Check the [PR](ADD PR LINK) to see it in action.
+The best way to fully understand the CI/CD is to check its executions. Check the:
+- [PR to create simple SQS queue](https://github.com/felipe-loka/terraform-ci-cd/pull/6) to see it in action.
+- [PR to create simple EC2 module](TO BE ADDED)
 
 
 <!-- BEGIN_TF_DOCS -->
