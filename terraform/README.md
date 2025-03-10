@@ -8,7 +8,9 @@
 
 ## Providers
 
-No providers.
+| Name | Version |
+|------|---------|
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.90.0 |
 
 ## Modules
 
@@ -16,7 +18,9 @@ No modules.
 
 ## Resources
 
-No resources.
+| Name | Type |
+|------|------|
+| [aws_instance.myec2](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance) | resource |
 
 ## Inputs
 
