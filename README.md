@@ -46,6 +46,8 @@ The best way to fully understand the CI/CD is to check its executions. Check the
 ## Pipeline
 The deployment pipeline uses [GitHub Actions Environment](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment) to control deployment to environment (notice that `apply` jobs uses GitHub Actions Environment). We can also set up rules to deploy only to production after a manual approval.
 
+![Pipeline](./docs/pipeline.png)
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 

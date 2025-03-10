@@ -171,6 +171,102 @@
           "store_path": "/nix/store/hk3y36laijnmf1fs5czgqql1kgkpg8zj-terraform-1.11.0"
         }
       }
+    },
+    "tflint@0.55.1": {
+      "last_modified": "2025-02-07T11:26:36Z",
+      "resolved": "github:NixOS/nixpkgs/d98abf5cf5914e5e4e9d57205e3af55ca90ffc1d#tflint",
+      "source": "devbox-search",
+      "version": "0.55.1",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/68211bisbjwja8k9y2m25a1mpwzg8qkl-tflint-0.55.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/68211bisbjwja8k9y2m25a1mpwzg8qkl-tflint-0.55.1"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/0j1gmqwj26f77rv7v7fcq5f1l8fijjwg-tflint-0.55.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/0j1gmqwj26f77rv7v7fcq5f1l8fijjwg-tflint-0.55.1"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/9sxdfdzhd3v400xir7apm5lqc4yx6wk3-tflint-0.55.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/9sxdfdzhd3v400xir7apm5lqc4yx6wk3-tflint-0.55.1"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/l0w06x7r6c419mxc4xdm954j7rlm7xvp-tflint-0.55.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/l0w06x7r6c419mxc4xdm954j7rlm7xvp-tflint-0.55.1"
+        }
+      }
+    },
+    "trivy@0.59.1": {
+      "last_modified": "2025-02-07T20:06:47Z",
+      "resolved": "github:NixOS/nixpkgs/e8d0b02af0958823c955aaab3c82b03f54411d91#trivy",
+      "source": "devbox-search",
+      "version": "0.59.1",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/gggxl0lphp4jn4j1m76val7kdkl6pjvb-trivy-0.59.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/gggxl0lphp4jn4j1m76val7kdkl6pjvb-trivy-0.59.1"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/wyyb1yswn6kkj4vdmgxdf7di0wg9gh2b-trivy-0.59.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/wyyb1yswn6kkj4vdmgxdf7di0wg9gh2b-trivy-0.59.1"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/b2rgpv6rabijzankipdj7agv5yxxnp6p-trivy-0.59.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/b2rgpv6rabijzankipdj7agv5yxxnp6p-trivy-0.59.1"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/rai7hscdn00w4q07dkhr31pw8i3cr060-trivy-0.59.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/rai7hscdn00w4q07dkhr31pw8i3cr060-trivy-0.59.1"
+        }
+      }
     }
   }
 }
