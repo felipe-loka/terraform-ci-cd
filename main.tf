@@ -1,4 +1,4 @@
-resource "aws_instance" "myec2" {
-  ami           = "ami-05b10e08d247fb927"
-  instance_type    = "t2z.maini"
+module "ec2" {
+  source = "modules/ec2"
+  instance_type = "t2x.smian"
 }
