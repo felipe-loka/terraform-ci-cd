@@ -7,5 +7,5 @@ resource "aws_sqs_queue" "terraform_queue" {
 
 module "ec2" {
   source        = "./modules/ec2"
-  instance_type = "t3.mini"
+  instance_type = "t3.nano"
 }
