@@ -39,6 +39,9 @@ jobs:
       - name: Run Terraform Init
         run: terraform init -backend=false
 
+      - name: Check Terraform Format
+        run: terraform fmt -check -recursive
+
       - name: Terraform Providers Lock Check
         run: |
           terraform providers lock \
