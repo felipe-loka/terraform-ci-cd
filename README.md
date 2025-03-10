@@ -28,8 +28,20 @@ This project follows an Account-Region based deployment, i.e. an environment is 
 There is a custom GitHub Actions (`./github/actions/terraform/action.yaml` file) action that is used to run terraform plan and apply commands in a given environment, please check the `./github/workflows/main.yaml` file to understand how this is being used. A `ci` Job was also created to validate formating, linting and security issues.
 
 The best way to fully understand the CI/CD is to check its executions. Check the:
-- [PR to create simple SQS queue](https://github.com/felipe-loka/terraform-ci-cd/pull/6) to see it in action.
-- [PR to create simple EC2 module](TO BE ADDED)
+- [PR to create simple SQS queue](https://github.com/felipe-loka/terraform-ci-cd/pull/6) to see the CI in action.
+- [PR to create an EC2 module](https://github.com/felipe-loka/terraform-ci-cd/pull/8) to see the CI in action.
+
+## How to fix problems that appear during CI?
+
+|        CI failures       |                                                      Command                                                     |
+|:------------------------:|:----------------------------------------------------------------------------------------------------------------:|
+|       terraform fmt      | `terraform fmt -recursive`                                                                                       |
+| Trivy scan               | ` trivy config . --severity CRITICAL,HIGH --quiet && cat trivy-result.txt`                                         |
+| terraform-docs           | `terraform-docs .`                                                                                               |
+| terraform providers lock | `terraform providers lock -platform=linux_amd64 -platform=darwin_amd64 -platform=darwin_arm64` |
+| tflint                   | `tflint --init && tflint --recursive`                                                                            |
+|                          |                                                                                                                  |
+|                          |                                                                                                                  |
 
 
 <!-- BEGIN_TF_DOCS -->
