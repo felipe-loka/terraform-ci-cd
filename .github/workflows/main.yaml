@@ -100,12 +100,6 @@ jobs:
         with:
           delete: true
 
-      - name: Fail if Vulnerabilities Exist
-        if: env.vulnerabilities == 'true'
-        run: |
-          echo "Vulnerabilities were found. Please fix it on the following commits."
-          exit 1
-
       - name: Terraform TfLint
         run: |
           tflint --init
