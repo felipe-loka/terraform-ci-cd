@@ -73,7 +73,7 @@ jobs:
         run: |
           cat trivy-result.txt
           if [ -s trivy-result.txt ]; then
-            echo -e "## Vulnerabilities Found!\n<details><summary>Details</summary>\n\n\`\`\`\n$(cat trivy-result.txt)\n\`\`\`\n</details>" > trivy-result.txt
+            echo -e "## :warning: Vulnerabilities Found! :warning: \n<details><summary>Please fix the security issues below </summary>\n\n\`\`\`\n$(cat trivy-result.txt)\n\`\`\`\n</details>" > trivy-result.txt
             echo "vulnerabilities=true" >> $GITHUB_ENV
           else
             echo "vulnerabilities=false" >> $GITHUB_ENV
