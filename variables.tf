@@ -5,4 +5,5 @@ variable "aws_region" {
 
 variable "queue_name" {
   description = "Queue name to be created"
+  type        = string
 }
