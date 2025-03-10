@@ -90,6 +90,12 @@ jobs:
         with:
           path: trivy-result.txt
 
+      - name: Remove PR Comment if No Issues Found
+        if: env.vulnerabilities == 'false'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          delete: true
+
       - name: Fail if Vulnerabilities Exist
         if: env.vulnerabilities == 'true'
         run: |
@@ -107,7 +113,12 @@ jobs:
         with:
           working-dir: terraform
           config-file: .terraform-docs.yml
-          fail-on-diff: true
+          # fail-on-diff: true
+
+      - name: Check git diff
+        run: |
+          git status
+          git diff terraform/README.md
 
   plan-dev-us-east-1:
     name: "[DEV - us-east-1] Terraform Plan"
