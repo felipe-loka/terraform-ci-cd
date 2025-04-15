@@ -29,12 +29,12 @@ jobs:
       - name: Install Terraform
         uses: hashicorp/setup-terraform@v3.1.2
         with:
-          terraform-version: ${{ env.TERRAFORM_VERSION }}
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
 
       - name: Terraform TfLint
         uses: terraform-linters/setup-tflint@v4.1.1
         with:
-          GITHUB_TOKEN: ${{ github.token }}
+          github_token: ${{ github.token }}
 
       - name: Run Terraform Init
         run: terraform init -backend=false
