@@ -24,6 +24,20 @@ This repository uses [Devbox](https://www.jetify.com/devbox) to manage the Devel
 
 This project follows an Account-Region based deployment, i.e. an environment is treated as the combination of AWS Accont and AWS Region (e.g. us-east-1 resources in account 111111111111 is treated as a single environment).
 
+
+PS: If you DO NOT intend to use terraform modules, you should set `recursive.enabled` value on file `.terraform-docs.yml` to `false`, otherwise the following error will be seen:
+
+```
+::debug working_dir=.
+::debug config_file=.terraform-docs.yml
+::debug output_mode=inject
+::debug output_file=README.md
+::debug terraform-docs markdown table --config .terraform-docs.yml --output-mode inject --output-file README.md --output-template <!-- BEGIN_TF_DOCS -->
+{{ .Content }}
+<!-- END_TF_DOCS --> .
+Error: stat modules: no such file or directory
+```
+
 ## How does this CI/CD work?
 There is a custom GitHub Actions (`./github/actions/terraform/action.yaml` file) action that is used to run terraform plan and apply commands in a given environment, please check the `./github/workflows/main.yaml` file to understand how this is being used. A `ci` Job was also created to validate formating, linting and security issues.
 
